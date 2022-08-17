@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+
 import {Message} from './message.model';
 import {MessageService} from './message.service';
 

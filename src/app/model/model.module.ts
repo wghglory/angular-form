@@ -1,7 +1,8 @@
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ProductRepository} from './product.repository';
+import {NgModule} from '@angular/core';
+
 import {ProductDataSource} from './product.datasource';
+import {ProductRepository} from './product.repository';
 
 @NgModule({
   declarations: [],

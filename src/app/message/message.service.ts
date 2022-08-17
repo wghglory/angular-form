@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Message} from './message.model';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
+
+import {Message} from './message.model';
 
 @Injectable()
 export class MessageService {
