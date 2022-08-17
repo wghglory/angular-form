@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, NgForm} from '@angular/forms';
 import {MODES, SharedState, StateUpdate} from '@components/shared-state.service';
 import {Message} from '@message/message.model';
 import {MessageService} from '@message/message.service';
@@ -11,10 +11,7 @@ import {ProductRepository} from '@model/product.repository';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
 })
-export class FormComponent {
-  product: Product = new Product();
-  editing = false;
-
+export class FormComponent implements OnInit {
   constructor(
     private repository: ProductRepository,
     private state: SharedState,
@@ -25,6 +22,13 @@ export class FormComponent {
     this.messageService.reportMessage(new Message('Creating New Product'));
   }
 
+  product: Product = new Product();
+  editing = false;
+
+  nameField: FormControl = new FormControl('Initial Value', {
+    updateOn: 'blur', // change, the default; blur; or submit
+  });
+
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
   handleStateChange(newState: StateUpdate) {
     this.editing = newState.mode == MODES.EDIT;
@@ -33,10 +37,20 @@ export class FormComponent {
       Object.assign(this.product, this.repository.getProduct(newState.id) ?? new Product());
 
       this.messageService.reportMessage(new Message(`Editing ${this.product.name}`));
+
+      this.nameField.setValue(this.product.name);
     } else {
       this.product = new Product();
       this.messageService.reportMessage(new Message('Creating New Product'));
+
+      this.nameField.setValue('');
     }
+  }
+
+  ngOnInit() {
+    this.nameField.valueChanges.subscribe(newValue => {
+      this.messageService.reportMessage(new Message(newValue || '(Empty)'));
+    });
   }
 
   submitForm(form: NgForm) {

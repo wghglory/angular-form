@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MessageModule} from '@message/message.module';
 import {ModelModule} from '@model/model.module';
 
@@ -12,6 +12,6 @@ import {TableComponent} from './table/table.component';
   declarations: [FormComponent, TableComponent],
   exports: [FormComponent, TableComponent],
   providers: [SharedState],
-  imports: [CommonModule, FormsModule, ModelModule, MessageModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModelModule, MessageModule],
 })
 export class ComponentsModule {}
