@@ -5,6 +5,7 @@
       <th>Name</th>
       <th>Category</th>
       <th>Price</th>
+      <th>Details</th>
       <th></th>
     </tr>
   </thead>
@@ -14,6 +15,13 @@
       <td>{{ item.name }}</td>
       <td>{{ item.category }}</td>
       <td>{{ item.price | currency: 'USD' }}</td>
+      <td>
+        <ng-container *ngIf="item.details; else empty">
+          {{ item.details?.supplier }}, {{ item.details?.keywords }}
+        </ng-container>
+        <ng-template #empty>(None)</ng-template>
+      </td>
+
       <td class="text-center">
         <button class="btn btn-danger btn-sm m-1" (click)="deleteProduct(item.id)">Delete</button>
         <button class="btn btn-warning btn-sm" (click)="editProduct(item.id)">Edit</button>

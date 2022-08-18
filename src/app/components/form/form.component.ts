@@ -43,6 +43,10 @@ export class FormComponent implements OnInit {
     }),
     category: new FormControl('', {validators: Validators.required}),
     price: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9.]+$')]}),
+    details: new FormGroup({
+      supplier: new FormControl('', {validators: Validators.required}),
+      keywords: new FormControl('', {validators: Validators.required}),
+    }),
   });
 
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
@@ -98,13 +102,14 @@ export class FormComponent implements OnInit {
     //     }
     //   });
     // }
-    // submitForm(form: NgForm) {
-    //   if (form.valid) {
-    //     this.repository.saveProduct(this.product);
-    //     this.product = new Product();
-    //     form.resetForm();
-    //   }
   }
+
+  // submitForm(form: NgForm) {
+  //   if (form.valid) {
+  //     this.repository.saveProduct(this.product);
+  //     this.product = new Product();
+  //     form.resetForm();
+  //   }
 
   submitForm() {
     if (this.productForm.valid) {
