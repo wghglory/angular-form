@@ -17,7 +17,7 @@
       <td>{{ item.price | currency: 'USD' }}</td>
       <td>
         <ng-container *ngIf="item.details; else empty">
-          {{ item.details?.supplier }}, {{ item.details?.keywords }}
+          {{ item.details.supplier }}, {{ item.details.keywords }}
         </ng-container>
         <ng-template #empty>(None)</ng-template>
       </td>

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {MODES, SharedState, StateUpdate} from '@components/shared-state.service';
 import {Message} from '@message/message.model';
 import {MessageService} from '@message/message.service';
@@ -36,6 +36,8 @@ export class FormComponent implements OnInit {
   //   category: this.categoryField,
   // });
 
+  keywordGroup = new FormArray([this.createKeywordFormControl()]);
+
   productForm: FormGroup = new FormGroup({
     name: new FormControl('', {
       validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
@@ -45,13 +47,27 @@ export class FormComponent implements OnInit {
     price: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9.]+$')]}),
     details: new FormGroup({
       supplier: new FormControl('', {validators: Validators.required}),
-      keywords: new FormControl('', {validators: Validators.required}),
+      // keywords: new FormControl('', {validators: Validators.required}),
+      keywords: this.keywordGroup,
     }),
   });
+
+  createKeywordFormControl(): FormControl {
+    return new FormControl('', {validators: Validators.pattern('^[A-Za-z ]+$')});
+  }
+
+  addKeywordControl() {
+    this.keywordGroup.push(this.createKeywordFormControl());
+  }
+
+  removeKeywordControl(index: number) {
+    this.keywordGroup.removeAt(index);
+  }
 
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
   handleStateChange(newState: StateUpdate) {
     this.editing = newState.mode == MODES.EDIT;
+    this.keywordGroup.clear();
 
     if (this.editing && newState.id) {
       Object.assign(this.product, this.repository.getProduct(newState.id) ?? new Product());
@@ -61,12 +77,22 @@ export class FormComponent implements OnInit {
       // use this.productForm.reset(this.product) to replace below 2
       // this.nameField.setValue(this.product.name);
       // this.categoryField.setValue(this.product.category);
+
+      // create keyword input, whose count is based on the product keywords
+      this.product.details?.keywords?.forEach(val => {
+        this.keywordGroup.push(this.createKeywordFormControl());
+      });
     } else {
       this.product = new Product();
       this.messageService.reportMessage(new Message('Creating New Product'));
 
       // this.nameField.setValue('');
       // this.categoryField.setValue('');
+    }
+
+    // at least create one keyword input
+    if (this.keywordGroup.length == 0) {
+      this.keywordGroup.push(this.createKeywordFormControl());
     }
 
     // populate or clear the form controls when user clicks the Create New Product or Edit button:
@@ -113,14 +139,26 @@ export class FormComponent implements OnInit {
 
   submitForm() {
     if (this.productForm.valid) {
-      Object.assign(this.product, this.productForm.value);
+      this.product = this.productForm.value;
+      const keywords = this.product.details?.keywords?.filter(keyword => keyword === '');
+      if (this.product.details) {
+        this.product.details.keywords = keywords;
+      }
+
       this.repository.saveProduct(this.product);
       this.product = new Product();
+
+      this.keywordGroup.clear();
+      this.keywordGroup.push(this.createKeywordFormControl());
+
       this.productForm.reset();
     }
   }
 
   resetForm() {
+    this.keywordGroup.clear();
+    this.keywordGroup.push(this.createKeywordFormControl());
+
     this.editing = true;
     this.product = new Product();
     this.productForm.reset();

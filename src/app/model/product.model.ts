@@ -9,5 +9,5 @@ export class Product {
 }
 
 export class Details {
-  constructor(public supplier?: string, public keywords?: string) {}
+  constructor(public supplier?: string, public keywords?: string[]) {}
 }
