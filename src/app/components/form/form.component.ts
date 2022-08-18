@@ -6,6 +6,7 @@ import {MessageService} from '@message/message.service';
 import {Product} from '@model/product.model';
 import {ProductRepository} from '@model/product.repository';
 import {FilteredFormArray} from '@shared/form/filteredFormArray';
+import {LimitValidator} from '@shared/validation/limitValidator';
 
 @Component({
   selector: 'app-form',
@@ -45,7 +46,9 @@ export class FormComponent implements OnInit {
       updateOn: 'change',
     }),
     category: new FormControl('', {validators: Validators.required}),
-    price: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9.]+$')]}),
+    price: new FormControl('', {
+      validators: [Validators.required, Validators.pattern('^[0-9.]+$'), LimitValidator.limit(300)],
+    }),
     details: new FormGroup({
       supplier: new FormControl('', {validators: Validators.required}),
       // keywords: new FormControl('', {validators: Validators.required}),
