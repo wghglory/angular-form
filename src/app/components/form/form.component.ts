@@ -25,15 +25,24 @@ export class FormComponent implements OnInit {
   product: Product = new Product();
   editing = false;
 
-  nameField: FormControl = new FormControl('Initial Value', {
-    validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
-    // updateOn: 'blur', // change(the default), blur, submit
-  });
-  categoryField: FormControl = new FormControl();
+  // nameField: FormControl = new FormControl('Initial Value', {
+  //   validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
+  //   // updateOn: 'blur', // change(the default), blur, submit
+  // });
+  // categoryField: FormControl = new FormControl();
+
+  // productForm: FormGroup = new FormGroup({
+  //   name: this.nameField,
+  //   category: this.categoryField,
+  // });
 
   productForm: FormGroup = new FormGroup({
-    name: this.nameField,
-    category: this.categoryField,
+    name: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
+      updateOn: 'change',
+    }),
+    category: new FormControl('', {validators: Validators.required}),
+    price: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9.]+$')]}),
   });
 
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
@@ -61,44 +70,54 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nameField.valueChanges.subscribe(newValue => {
-      this.messageService.reportMessage(new Message(newValue || '(Empty)'));
-
-      // if (typeof newValue == 'string' && newValue.length % 2 == 0) {
-      //   this.nameField.markAsPristine();
-      // }
-    });
-
-    // one form control controls another control
-    this.nameField.statusChanges.subscribe(newStatus => {
-      if (newStatus == 'INVALID') {
-        this.categoryField.disable();
-      } else {
-        this.categoryField.enable();
-      }
-    });
-
-    // TODO: snippet?
-    this.productForm.statusChanges.subscribe(newStatus => {
-      if (newStatus == 'INVALID') {
-        const invalidControls: string[] = [];
-        for (const controlName in this.productForm.controls) {
-          if (this.productForm.controls[controlName].invalid) {
-            invalidControls.push(controlName);
-          }
-        }
-        this.messageService.reportMessage(new Message(`INVALID: ${invalidControls.join(', ')}`));
-      } else {
-        this.messageService.reportMessage(new Message(newStatus));
-      }
-    });
+    //   // this.nameField.valueChanges.subscribe(newValue => {
+    //   //   this.messageService.reportMessage(new Message(newValue || '(Empty)'));
+    //   //   // if (typeof newValue == 'string' && newValue.length % 2 == 0) {
+    //   //   //   this.nameField.markAsPristine();
+    //   //   // }
+    //   // });
+    //   // // one form control controls another control
+    //   // this.nameField.statusChanges.subscribe(newStatus => {
+    //   //   if (newStatus == 'INVALID') {
+    //   //     this.categoryField.disable();
+    //   //   } else {
+    //   //     this.categoryField.enable();
+    //   //   }
+    //   // });
+    //   this.productForm.statusChanges.subscribe(newStatus => {
+    //     if (newStatus == 'INVALID') {
+    //       const invalidControls: string[] = [];
+    //       for (const controlName in this.productForm.controls) {
+    //         if (this.productForm.controls[controlName].invalid) {
+    //           invalidControls.push(controlName);
+    //         }
+    //       }
+    //       this.messageService.reportMessage(new Message(`INVALID: ${invalidControls.join(', ')}`));
+    //     } else {
+    //       this.messageService.reportMessage(new Message(newStatus));
+    //     }
+    //   });
+    // }
+    // submitForm(form: NgForm) {
+    //   if (form.valid) {
+    //     this.repository.saveProduct(this.product);
+    //     this.product = new Product();
+    //     form.resetForm();
+    //   }
   }
 
-  submitForm(form: NgForm) {
-    if (form.valid) {
+  submitForm() {
+    if (this.productForm.valid) {
+      Object.assign(this.product, this.productForm.value);
       this.repository.saveProduct(this.product);
       this.product = new Product();
-      form.resetForm();
+      this.productForm.reset();
     }
+  }
+
+  resetForm() {
+    this.editing = true;
+    this.product = new Product();
+    this.productForm.reset();
   }
 }
