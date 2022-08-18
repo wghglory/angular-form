@@ -26,7 +26,7 @@ export class FormComponent implements OnInit {
   editing = false;
 
   nameField: FormControl = new FormControl('Initial Value', {
-    updateOn: 'blur', // change, the default; blur; or submit
+    // updateOn: 'blur', // change(the default), blur, submit
   });
 
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
@@ -50,6 +50,10 @@ export class FormComponent implements OnInit {
   ngOnInit() {
     this.nameField.valueChanges.subscribe(newValue => {
       this.messageService.reportMessage(new Message(newValue || '(Empty)'));
+
+      if (typeof newValue == 'string' && newValue.length % 2 == 0) {
+        this.nameField.markAsPristine();
+      }
     });
   }
 
