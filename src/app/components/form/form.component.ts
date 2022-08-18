@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, NgForm, Validators} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {MODES, SharedState, StateUpdate} from '@components/shared-state.service';
 import {Message} from '@message/message.model';
 import {MessageService} from '@message/message.service';
@@ -31,6 +31,11 @@ export class FormComponent implements OnInit {
   });
   categoryField: FormControl = new FormControl();
 
+  productForm: FormGroup = new FormGroup({
+    name: this.nameField,
+    category: this.categoryField,
+  });
+
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
   handleStateChange(newState: StateUpdate) {
     this.editing = newState.mode == MODES.EDIT;
@@ -40,15 +45,19 @@ export class FormComponent implements OnInit {
 
       this.messageService.reportMessage(new Message(`Editing ${this.product.name}`));
 
-      this.nameField.setValue(this.product.name);
-      this.categoryField.setValue(this.product.category);
+      // use this.productForm.reset(this.product) to replace below 2
+      // this.nameField.setValue(this.product.name);
+      // this.categoryField.setValue(this.product.category);
     } else {
       this.product = new Product();
       this.messageService.reportMessage(new Message('Creating New Product'));
 
-      this.nameField.setValue('');
-      this.categoryField.setValue('');
+      // this.nameField.setValue('');
+      // this.categoryField.setValue('');
     }
+
+    // populate or clear the form controls when user clicks the Create New Product or Edit button:
+    this.productForm.reset(this.product);
   }
 
   ngOnInit() {
@@ -66,6 +75,21 @@ export class FormComponent implements OnInit {
         this.categoryField.disable();
       } else {
         this.categoryField.enable();
+      }
+    });
+
+    // TODO: snippet?
+    this.productForm.statusChanges.subscribe(newStatus => {
+      if (newStatus == 'INVALID') {
+        const invalidControls: string[] = [];
+        for (const controlName in this.productForm.controls) {
+          if (this.productForm.controls[controlName].invalid) {
+            invalidControls.push(controlName);
+          }
+        }
+        this.messageService.reportMessage(new Message(`INVALID: ${invalidControls.join(', ')}`));
+      } else {
+        this.messageService.reportMessage(new Message(newStatus));
       }
     });
   }
