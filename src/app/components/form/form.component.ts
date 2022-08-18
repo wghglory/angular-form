@@ -7,6 +7,7 @@ import {Product} from '@model/product.model';
 import {ProductRepository} from '@model/product.repository';
 import {FilteredFormArray} from '@shared/form/filteredFormArray';
 import {LimitValidator} from '@shared/validation/limitValidator';
+import {ProhibitedValidator} from '@shared/validation/prohibitedValidator';
 import {UniqueValidator} from '@shared/validation/uniqueValidator';
 
 @Component({
@@ -48,7 +49,7 @@ export class FormComponent implements OnInit {
       validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
       updateOn: 'change',
     }),
-    category: new FormControl('', {validators: Validators.required}),
+    category: new FormControl('', {validators: Validators.required, asyncValidators: ProhibitedValidator.prohibited()}),
     price: new FormControl('', {
       validators: [Validators.required, Validators.pattern('^[0-9.]+$'), LimitValidator.limit(300)],
     }),

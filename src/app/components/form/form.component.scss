@@ -4,3 +4,7 @@ input.ng-dirty.ng-invalid {
 input.ng-dirty.ng-valid {
   border: 2px solid #6bc502;
 }
+// triggered during async validation
+input.ng-pending {
+  border: 2px solid #ffc107;
+}
