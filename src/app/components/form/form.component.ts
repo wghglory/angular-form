@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, NgForm} from '@angular/forms';
+import {FormControl, NgForm, Validators} from '@angular/forms';
 import {MODES, SharedState, StateUpdate} from '@components/shared-state.service';
 import {Message} from '@message/message.model';
 import {MessageService} from '@message/message.service';
@@ -26,6 +26,7 @@ export class FormComponent implements OnInit {
   editing = false;
 
   nameField: FormControl = new FormControl('Initial Value', {
+    validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
     // updateOn: 'blur', // change(the default), blur, submit
   });
 
@@ -51,9 +52,9 @@ export class FormComponent implements OnInit {
     this.nameField.valueChanges.subscribe(newValue => {
       this.messageService.reportMessage(new Message(newValue || '(Empty)'));
 
-      if (typeof newValue == 'string' && newValue.length % 2 == 0) {
-        this.nameField.markAsPristine();
-      }
+      // if (typeof newValue == 'string' && newValue.length % 2 == 0) {
+      //   this.nameField.markAsPristine();
+      // }
     });
   }
 
