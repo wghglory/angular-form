@@ -5,6 +5,7 @@ import {Message} from '@message/message.model';
 import {MessageService} from '@message/message.service';
 import {Product} from '@model/product.model';
 import {ProductRepository} from '@model/product.repository';
+import {FilteredFormArray} from '@shared/form/filteredFormArray';
 
 @Component({
   selector: 'app-form',
@@ -36,7 +37,7 @@ export class FormComponent implements OnInit {
   //   category: this.categoryField,
   // });
 
-  keywordGroup = new FormArray([this.createKeywordFormControl()]);
+  keywordGroup = new FilteredFormArray([this.createKeywordFormControl()]);
 
   productForm: FormGroup = new FormGroup({
     name: new FormControl('', {
@@ -140,10 +141,13 @@ export class FormComponent implements OnInit {
   submitForm() {
     if (this.productForm.valid) {
       this.product = this.productForm.value;
-      const keywords = this.product.details?.keywords?.filter(keyword => keyword === '');
-      if (this.product.details) {
-        this.product.details.keywords = keywords;
-      }
+
+      /* not needed due to FilteredFormArray
+      // const keywords = this.product.details?.keywords?.filter(keyword => keyword === '');
+      // if (this.product.details) {
+      //   this.product.details.keywords = keywords;
+      // }
+      */
 
       this.repository.saveProduct(this.product);
       this.product = new Product();
