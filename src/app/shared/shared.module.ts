@@ -1,11 +1,12 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
-import {ValidationHelper} from './validators/validationHelper';
+import {ValidationErrorsDirective} from './validation/validationErrors.directive';
+import {ValidationHelper} from './validation/validationHelper.pipe';
 
 @NgModule({
-  declarations: [ValidationHelper],
+  declarations: [ValidationHelper, ValidationErrorsDirective],
   imports: [CommonModule],
-  exports: [ValidationHelper],
+  exports: [ValidationHelper, ValidationErrorsDirective],
 })
 export class SharedModule {}

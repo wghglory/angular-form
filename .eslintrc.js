@@ -21,14 +21,7 @@ module.exports = {
         'import/first': 'error',
         'import/newline-after-import': 'error',
         'import/no-duplicates': 'error',
-        '@angular-eslint/directive-selector': [
-          'error',
-          {
-            type: 'attribute',
-            prefix: 'app',
-            style: 'camelCase',
-          },
-        ],
+        '@angular-eslint/no-input-rename': 'off',
         '@angular-eslint/component-selector': [
           'error',
           {
