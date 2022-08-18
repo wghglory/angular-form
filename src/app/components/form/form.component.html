@@ -33,7 +33,7 @@
   <div class="form-group">
     <label>Price</label>
     <!-- <input class="form-control" name="price" [(ngModel)]="product.price" required pattern="^[0-9\.]+$" /> -->
-    <input class="form-control" formControlName="price" />
+    <input class="form-control" formControlName="price" [high]="300" [low]="10" />
     <ul class="text-danger list-unstyled mt-1">
       <li *validationErrors="productForm; control: 'price'; let err">
         {{ err }}
