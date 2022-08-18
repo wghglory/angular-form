@@ -29,6 +29,7 @@ export class FormComponent implements OnInit {
     validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
     // updateOn: 'blur', // change(the default), blur, submit
   });
+  categoryField: FormControl = new FormControl();
 
   // table component calls shared state update to trigger subject.next, and form subscribe the subject.
   handleStateChange(newState: StateUpdate) {
@@ -40,11 +41,13 @@ export class FormComponent implements OnInit {
       this.messageService.reportMessage(new Message(`Editing ${this.product.name}`));
 
       this.nameField.setValue(this.product.name);
+      this.categoryField.setValue(this.product.category);
     } else {
       this.product = new Product();
       this.messageService.reportMessage(new Message('Creating New Product'));
 
       this.nameField.setValue('');
+      this.categoryField.setValue('');
     }
   }
 
@@ -55,6 +58,15 @@ export class FormComponent implements OnInit {
       // if (typeof newValue == 'string' && newValue.length % 2 == 0) {
       //   this.nameField.markAsPristine();
       // }
+    });
+
+    // one form control controls another control
+    this.nameField.statusChanges.subscribe(newStatus => {
+      if (newStatus == 'INVALID') {
+        this.categoryField.disable();
+      } else {
+        this.categoryField.enable();
+      }
     });
   }
 
