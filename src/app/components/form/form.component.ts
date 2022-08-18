@@ -7,6 +7,7 @@ import {Product} from '@model/product.model';
 import {ProductRepository} from '@model/product.repository';
 import {FilteredFormArray} from '@shared/form/filteredFormArray';
 import {LimitValidator} from '@shared/validation/limitValidator';
+import {UniqueValidator} from '@shared/validation/uniqueValidator';
 
 @Component({
   selector: 'app-form',
@@ -38,7 +39,9 @@ export class FormComponent implements OnInit {
   //   category: this.categoryField,
   // });
 
-  keywordGroup = new FilteredFormArray([this.createKeywordFormControl()]);
+  keywordGroup = new FilteredFormArray([this.createKeywordFormControl()], {
+    validators: UniqueValidator.unique(),
+  });
 
   productForm: FormGroup = new FormGroup({
     name: new FormControl('', {

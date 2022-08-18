@@ -58,6 +58,9 @@
     </div> -->
     <ng-container formGroupName="keywords">
       <button class="btn btn-sm btn-primary my-2" (click)="addKeywordControl()" type="button">Add Keyword</button>
+      <ul class="text-danger list-unstyled mt-1">
+        <li *validationErrors="productForm; control: 'details.keywords'; label: 'keywords'; let err">{{ err }}</li>
+      </ul>
 
       <div class="form-group" *ngFor="let c of keywordGroup.controls; let i = index; let count = count">
         <label>Keyword {{ i + 1 }}</label>
