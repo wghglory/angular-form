@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MODES, SharedState, StateUpdate} from '@components/shared-state.service';
 import {Message} from '@message/message.model';
 import {MessageService} from '@message/message.service';
@@ -26,7 +26,7 @@ export class FormComponent implements OnInit {
     this.messageService.reportMessage(new Message('Creating New Product'));
   }
 
-  product: Product = new Product();
+  product = new Product();
   editing = false;
 
   // nameField: FormControl = new FormControl('Initial Value', {
@@ -44,13 +44,13 @@ export class FormComponent implements OnInit {
     validators: UniqueValidator.unique(),
   });
 
-  productForm: FormGroup = new FormGroup({
+  productForm = new FormGroup({
     name: new FormControl('', {
       validators: [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z ]+$')],
       updateOn: 'change',
     }),
     category: new FormControl('', {validators: Validators.required, asyncValidators: ProhibitedValidator.prohibited()}),
-    price: new FormControl('', {
+    price: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.pattern('^[0-9.]+$'), LimitValidator.limit(300)],
     }),
     details: new FormGroup({
@@ -60,7 +60,7 @@ export class FormComponent implements OnInit {
     }),
   });
 
-  createKeywordFormControl(): FormControl {
+  createKeywordFormControl() {
     return new FormControl('', {validators: Validators.pattern('^[A-Za-z ]+$')});
   }
 
@@ -147,7 +147,7 @@ export class FormComponent implements OnInit {
 
   submitForm() {
     if (this.productForm.valid) {
-      this.product = this.productForm.value;
+      Object.assign(this.product, this.productForm.value);
 
       /* not needed due to FilteredFormArray
       // const keywords = this.product.details?.keywords?.filter(keyword => keyword === '');
