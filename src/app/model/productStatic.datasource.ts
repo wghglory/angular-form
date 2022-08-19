@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Product} from './product.model';
 
 @Injectable()
-export class ProductDataSource {
+export class ProductStaticDataSource {
   private data: Product[];
 
   constructor() {

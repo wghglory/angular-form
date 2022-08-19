@@ -9,7 +9,8 @@
     "test": "ng test",
     "fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,md}' --quiet",
     "format": "prettier --write 'src/**/*.{html,js,jsx,ts,tsx,scss,css,md}'",
-    "precommit": "npm run fix"
+    "precommit": "npm run fix",
+    "json": "json-server --p 3500 src/app/model/restData.js"
   },
   "private": true,
   "dependencies": {
@@ -43,6 +44,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jasmine-core": "~4.2.0",
+    "json-server": "^0.17.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
